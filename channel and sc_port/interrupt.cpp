@@ -3,7 +3,7 @@
 // An example of using sc_ports to connect to channel.
 // A channel implements the interface functions, such as Interrupt in this example.
 
-struct Interrupt : sc_interface
+struct Interrupt : public sc_interface
 {
   void notify()
   {
@@ -13,51 +13,53 @@ struct Interrupt : sc_interface
   {
       m_interrupt.notify(t);
   }
-  const sc_event& default_event() const 
+  const sc_event& default_event() const override 
   { 
       return m_interrupt; 
   }
   sc_event m_interrupt;
 };
 
-SC_MODULE(Source)
+struct Source : public sc_module
 {
-  SC_CTOR(Source)
+  SC_HAS_PROCESS(Source);
+  Source(const std::string& nm) : sc_module(nm)
   {
 	  SC_THREAD(SendEvent);
   }
   void SendEvent()
-  {
-	while(1)
-	{
-		wait(2,SC_NS);	
-		std::cout << sc_time_stamp() << " Source Notifying event" << std::endl;
-		irq_op->notify(SC_ZERO_TIME);
-	}
+  { 
+	  while(1)
+	  {
+		  wait(2, SC_NS);	
+		  irq_op->notify(SC_ZERO_TIME);
+	  }
   }
   sc_port<Interrupt> irq_op;
 };
 
-SC_MODULE(Destination)
+struct Destination : public sc_module
 {
-  SC_CTOR(Destination)
+  SC_HAS_PROCESS(Destination);
+  Destination(const std::string& nm) : sc_module(nm)
   {
-	 SC_THREAD(DetectEvent);	
+	   SC_THREAD(DetectEvent);	
   }
   void DetectEvent()
   {
 	  while(1)
 	  {
-		wait(irq_ip->default_event());	
-		std::cout << sc_time_stamp() << " Destination Detect event" << std::endl;
+		 wait(irq_ip->default_event());	
+		 std::cout << sc_time_stamp() << " Destination Detect event" << std::endl;
 	  }
   }
   sc_port<Interrupt> irq_ip;
 };
 
-SC_MODULE(RunSimulation)
+class RunSimulation
 {
-	SC_CTOR(RunSimulation)
+public:
+	RunSimulation()
 	{
 		m_irq = new Interrupt();
 		m_source = new Source("Source");
@@ -68,7 +70,7 @@ SC_MODULE(RunSimulation)
 	~RunSimulation()
 	{
 		Destruct();
-		std::cout << "destruct resourse complete" << std::endl;
+		std::cout << "RunSimulation::Dtor" << std::endl;
 	}
 	void Destruct()
 	{
@@ -79,14 +81,15 @@ SC_MODULE(RunSimulation)
 		if(m_dest) 
 			delete m_dest;
 	}
+private:
 	Interrupt *m_irq;
 	Source *m_source;
-    Destination *m_dest;
+  Destination *m_dest;
 };
 
 int sc_main(int argc, char* argv[])
 {
-  RunSimulation run("RunSimulation");
+  RunSimulation run;
   sc_start(20, SC_NS);
   sc_stop();
   return 0;
