@@ -3,7 +3,7 @@
 // An example of using sc_ports to connect to channel.
 // A channel implements the interface functions, such as Interrupt in this example.
 
-struct Interrupt : public sc_interface
+struct Interrupt : sc_interface
 {
   void notify()
   {
@@ -20,7 +20,7 @@ struct Interrupt : public sc_interface
   sc_event m_interrupt;
 };
 
-struct Source : public sc_module
+struct Source : sc_module
 {
   SC_HAS_PROCESS(Source);
   Source(const std::string& nm) : sc_module(nm)
@@ -38,7 +38,7 @@ struct Source : public sc_module
   sc_port<Interrupt> irq_op;
 };
 
-struct Destination : public sc_module
+struct Destination : sc_module
 {
   SC_HAS_PROCESS(Destination);
   Destination(const std::string& nm) : sc_module(nm)
