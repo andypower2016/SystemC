@@ -1,0 +1,2 @@
+Example of using FIFO, blocking read/write with sc_interface and sc_event
+The producer terminates after writing 
