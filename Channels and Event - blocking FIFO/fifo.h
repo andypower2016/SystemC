@@ -73,9 +73,10 @@ public:
     buf[wi] = c;
     wi = (wi + 1) % size;
     free--;
+    int ret = num_written;
     request_update();
     m_mutex.unlock();
-    return num_written;
+    return ret;
   }
 
   int read(char& c)        // blocking read
@@ -92,9 +93,10 @@ public:
     c = buf[ri];
     ri = (ri + 1) % size;
     free++;  
+    int ret = num_read;
     request_update();
     m_mutex.unlock();
-    return num_read;
+    return ret;
   }
 
   char read()
