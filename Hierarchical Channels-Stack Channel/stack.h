@@ -18,7 +18,7 @@ public:
   // constructor
   stack(sc_module_name nm) : sc_module(nm), top(0)
   {
-    SetDone(false);
+    set_done(false);
   }
 
   bool empty()
