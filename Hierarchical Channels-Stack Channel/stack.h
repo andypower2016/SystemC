@@ -1,6 +1,7 @@
 #ifndef STACK_H
 #define STACK_H
 
+#include <mutex>
 #include "systemc.h"
 #include "stack_if.h"
 
@@ -14,33 +15,36 @@ private:
   char data[20];
   int top;                 // pointer to top of stack
   bool done;
+  std::mutex m_mutex;
 public:
   // constructor
   stack(sc_module_name nm) : sc_module(nm), top(0)
   {
-    set_done(false);
+    SetDone(false);
   }
 
-  bool empty()
+  bool IsEmpty()
   {
     return top == 0;
   }
 
-  void set_done(bool d)
+  void SetDone(bool d)
   {
     done = d;
   }
 
-  bool get_done()
+  bool GetDone()
   {
     return done;
   }
 
   bool nb_write(char c)
   {
+    const std::lock_guard<std::mutex> lk(m_mutex);
     if (top < 20)
     {
       data[top++] = c;
+   
       return true;
     }
     return false;
@@ -53,6 +57,7 @@ public:
 
   bool nb_read(char& c)
   {
+    const std::lock_guard<std::mutex> lk(m_mutex);
     if (top > 0)
     {
       c = data[--top];
