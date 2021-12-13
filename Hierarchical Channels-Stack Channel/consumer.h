@@ -16,6 +16,13 @@ public:
     while (true)
     {
       wait();             // for clock edge
+
+      if(in->GetDone() && in->IsEmpty())
+      {
+        cout << endl;
+        break;
+      }
+
       if (in->nb_read(c))
         //cout << "R " << c << " at "
         //     << sc_time_stamp() << endl;

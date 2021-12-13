@@ -13,12 +13,27 @@ class stack
 private:
   char data[20];
   int top;                 // pointer to top of stack
-
+  bool done;
 public:
   // constructor
   stack(sc_module_name nm) : sc_module(nm), top(0)
   {
-    
+    SetDone(false);
+  }
+
+  bool IsEmpty()
+  {
+    return top == 0;
+  }
+
+  void SetDone(bool d)
+  {
+    done = d;
+  }
+
+  bool GetDone()
+  {
+    return done;
   }
 
   bool nb_write(char c)

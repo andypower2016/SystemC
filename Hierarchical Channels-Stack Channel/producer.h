@@ -21,6 +21,11 @@ public:
         /*cout << "W " << TestString[i] << " at "
              << sc_time_stamp() << endl;*/
       i = (i+1) % 32;
+      if(i == 0) // write TestString once
+      {
+        out->SetDone(true);
+        break;
+      }
     }
   }
 
