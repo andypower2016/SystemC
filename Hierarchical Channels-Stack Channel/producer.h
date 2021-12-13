@@ -23,7 +23,7 @@ public:
       i = (i+1) % 32;
       if(i == 0) // write TestString once
       {
-        out->SetDone(true);
+        out->set_done(true);
         break;
       }
     }
