@@ -17,7 +17,7 @@ public:
     {
       wait();             // for clock edge
 
-      if(in->GetDone() && in->IsEmpty())
+      if(in->get_done() && in->empty())
       {
         cout << endl;
         break;
