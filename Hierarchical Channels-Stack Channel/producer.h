@@ -6,7 +6,7 @@
 class producer : public sc_module
 {
 public:
-
+  // sc_port<stack_write_if,10> , multiple interfaces can be bound, the default is 1 if not specified.
   sc_port<stack_write_if> out;
   sc_in<bool> Clock;
 
