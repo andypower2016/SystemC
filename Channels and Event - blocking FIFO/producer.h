@@ -19,12 +19,13 @@ public:
     while (true)
     {
       wait();             // for clock edge
-      out->write(TestString[i]);
-      
-      cout << "W " << TestString[i] << " at "
+      if(out->write(TestString[i]) > 0)
+      {
+        cout << "W " << TestString[i] << " at "
              << sc_time_stamp() << endl;
-      i = (i+1) % 16;
 
+        i = (i+1) % 16;
+      }
       if(count++==16) // breaks, producer totaly writes "abcdefghijklmnopa"
         break;
     }

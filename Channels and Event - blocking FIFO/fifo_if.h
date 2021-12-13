@@ -5,7 +5,7 @@
 class fifo_out_if :  virtual public sc_interface
 {
 public:
-  virtual void write(char) = 0;          // blocking write
+  virtual int write(char) = 0;          // blocking write
   virtual int num_free() const = 0;      // free entries
 protected:
   fifo_out_if()
@@ -19,7 +19,7 @@ private:
 class fifo_in_if :  virtual public sc_interface
 {
 public:
-  virtual void read(char&) = 0;          // blocking read
+  virtual int read(char&) = 0;          // blocking read
   virtual char read() = 0;
   virtual int num_available() const = 0; // available
                                          // entries

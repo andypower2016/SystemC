@@ -59,7 +59,7 @@ public:
   }
 
 
-  void write(char c)        // blocking write
+  int write(char c)        // blocking write
   {
     m_mutex.lock();
     if (num_free() == 0)
@@ -75,9 +75,10 @@ public:
     free--;
     request_update();
     m_mutex.unlock();
+    return num_written;
   }
 
-  void read(char& c)        // blocking read
+  int read(char& c)        // blocking read
   {
     m_mutex.lock();
     if (num_available() == 0)
@@ -93,6 +94,7 @@ public:
     free++;  
     request_update();
     m_mutex.unlock();
+    return num_read;
   }
 
   char read()

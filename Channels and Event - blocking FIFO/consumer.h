@@ -16,10 +16,11 @@ public:
     while (true)
     {
       wait();             // for clock edge   
-      in->read(c);
-      
-      cout << "R " << c << " at "
+      if(in->read(c) > 0)
+      {
+        cout << "R " << c << " at "
              << sc_time_stamp() << endl;
+      }
     }
   }
 
