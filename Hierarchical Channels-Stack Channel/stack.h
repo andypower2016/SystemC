@@ -21,17 +21,17 @@ public:
     SetDone(false);
   }
 
-  bool IsEmpty()
+  bool empty()
   {
     return top == 0;
   }
 
-  void SetDone(bool d)
+  void set_done(bool d)
   {
     done = d;
   }
 
-  bool GetDone()
+  bool get_done()
   {
     return done;
   }
