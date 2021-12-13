@@ -6,7 +6,7 @@
 int sc_main(int argc, char* argv[])
 {
   sc_clock ClkFast("ClkFast", 1, SC_NS);
-  sc_clock ClkSlow("ClkSlow", 500, SC_NS, 0.5, 1, SC_NS, true);
+  sc_clock ClkSlow("ClkSlow", 500, SC_NS, 0.5, 500*2, SC_NS, true);
 
   fifo fifo1;
 
@@ -19,7 +19,7 @@ int sc_main(int argc, char* argv[])
   C1.Clock(ClkSlow);
 
   int redundant = 500;
-  sc_start((500*16+1) + redundant, SC_NS);
+  sc_start((500*18+1) + redundant, SC_NS);
 
   return 0;
 }

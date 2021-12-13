@@ -10,6 +10,8 @@ public:
   sc_port<fifo_out_if> out;
   sc_in<bool> Clock;
 
+  int count = 0;
+
   void do_writes()
   {
     int i = 0;
@@ -23,7 +25,7 @@ public:
              << sc_time_stamp() << endl;
       i = (i+1) % 16;
 
-      if(i==0) // breaks after writing TestString
+      if(count++==16) // breaks, producer totaly writes "abcdefghijklmnopa"
         break;
     }
   }

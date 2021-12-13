@@ -1,6 +1,8 @@
 #ifndef FIFO_H
 #define FIFO_H
 
+#include <mutex>
+
 #include "systemc.h"
 #include "fifo_if.h"
 
@@ -21,6 +23,8 @@ protected:
   sc_event data_read_event;
   sc_event data_written_event;
 
+  std::mutex m_mutex;
+
 public:
   // constructor
   explicit fifo(int size_ = 16)
@@ -28,6 +32,7 @@ public:
   {
     size = size_;
     buf = new char[size];
+    num_read = num_written = 0;
     reset();
   }
 
@@ -56,27 +61,38 @@ public:
 
   void write(char c)        // blocking write
   {
+    m_mutex.lock();
     if (num_free() == 0)
+    {
+      m_mutex.unlock();
+      cout << __FUNCTION__ << " queue is full at " << sc_time_stamp() << endl;  
       wait(data_read_event);
+      m_mutex.lock();
+    }
     num_written++;
     buf[wi] = c;
     wi = (wi + 1) % size;
     free--;
     request_update();
+    m_mutex.unlock();
   }
 
   void read(char& c)        // blocking read
   {
+    m_mutex.lock();
     if (num_available() == 0)
     {
-      cout << __FUNCTION__ << " waiting for data at " << sc_time_stamp() << endl;
+      m_mutex.unlock();
+      cout << __FUNCTION__ << " waiting for data at " << sc_time_stamp() << endl;  
       wait(data_written_event);
+      m_mutex.lock();
     }
     num_read++;
     c = buf[ri];
     ri = (ri + 1) % size;
-    free++;
+    free++;  
     request_update();
+    m_mutex.unlock();
   }
 
   char read()
@@ -89,9 +105,15 @@ public:
   void update()
   {
     if (num_read > 0)
+    {
+      cout << __FUNCTION__ << " data_read_event notify " << sc_time_stamp() << endl; 
       data_read_event.notify(SC_ZERO_TIME);
+    }
     if (num_written > 0)
+    {
+      cout << __FUNCTION__ << " data_written_event notify " << sc_time_stamp() << endl; 
       data_written_event.notify(SC_ZERO_TIME);
+    }
     num_readable = size - free;
     num_read = 0;
     num_written = 0;
