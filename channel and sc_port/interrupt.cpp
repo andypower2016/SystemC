@@ -3,8 +3,14 @@
 // An example of using sc_ports to connect to channel.
 // A channel implements the interface functions, such as Interrupt in this example.
 
-struct Interrupt : sc_interface
+class Interrupt : public sc_module, 
+		   public virtual sc_interface
 {
+public:
+  Interrupt(sc_module_name nm) : sc_module(nm)
+  {
+  
+  }
   void notify()
   {
 	  m_interrupt.notify();
@@ -17,6 +23,13 @@ struct Interrupt : sc_interface
   { 
       return m_interrupt; 
   }
+protected:
+  void register_port(sc_port_base& port_, const char* if_typename_)
+  {
+    cout << "binding    " << port_.name() << " to "
+         << "interface: " << if_typename_ << endl;
+  }
+private:
   sc_event m_interrupt;
 };
 
@@ -59,32 +72,24 @@ struct Destination : sc_module
 class RunSimulation
 {
 public:
-	RunSimulation()
+	RunSimulation() : m_irq("MyInterrupt"),
+			  m_source("Source"),
+			  m_dest("Destination"),
 	{
-		m_irq = new Interrupt();
-		m_source = new Source("Source");
-		m_dest = new Destination("Destination");
-		m_source->irq_op(*m_irq);
-		m_dest->irq_ip(*m_irq);
+		//m_irq = new Interrupt("MyInterrupt");
+		//m_source = new Source("Source");
+		//m_dest = new Destination("Destination");
+		m_source.irq_op(m_irq);
+		m_dest.irq_ip(m_irq);
 	}
 	~RunSimulation()
 	{
-		Destruct();
 		std::cout << "RunSimulation::Dtor" << std::endl;
 	}
-	void Destruct()
-	{
-		if(m_irq) 
-			delete m_irq;
-		if(m_source) 
-			delete m_source;
-		if(m_dest) 
-			delete m_dest;
-	}
 private:
-	Interrupt *m_irq;
-	Source *m_source;
-  Destination *m_dest;
+	Interrupt m_irq;
+	Source m_source;
+        Destination m_dest;
 };
 
 int sc_main(int argc, char* argv[])
