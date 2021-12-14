@@ -61,6 +61,7 @@ public:
 
   int write(char c)        // blocking write
   {
+    int ret = 0;
     m_mutex.lock();
     if (num_free() == 0)
     {
@@ -73,7 +74,7 @@ public:
     buf[wi] = c;
     wi = (wi + 1) % size;
     free--;
-    int ret = num_written;
+    ret = num_written;
     request_update();
     m_mutex.unlock();
     return ret;
@@ -81,6 +82,7 @@ public:
 
   int read(char& c)        // blocking read
   {
+    int ret = 0;
     m_mutex.lock();
     if (num_available() == 0)
     {
@@ -93,7 +95,7 @@ public:
     c = buf[ri];
     ri = (ri + 1) % size;
     free++;  
-    int ret = num_read;
+    ret = num_read;
     request_update();
     m_mutex.unlock();
     return ret;
