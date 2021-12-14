@@ -7,7 +7,7 @@ class Interrupt : public sc_module,
 		   public virtual sc_interface
 {
 public:
-  Interrupt(sc_module_name nm) : sc_module(nm)
+  Interrupt(const sc_module_name& nm) : sc_module(nm)
   {
   
   }
@@ -36,7 +36,7 @@ private:
 struct Source : sc_module
 {
   SC_HAS_PROCESS(Source);
-  Source(const std::string& nm) : sc_module(nm)
+  Source(const sc_module_name& nm) : sc_module(nm)
   {
 	  SC_THREAD(SendEvent);
   }
@@ -54,7 +54,7 @@ struct Source : sc_module
 struct Destination : sc_module
 {
   SC_HAS_PROCESS(Destination);
-  Destination(const std::string& nm) : sc_module(nm)
+  Destination(const sc_module_name& nm) : sc_module(nm)
   {
 	   SC_THREAD(DetectEvent);	
   }
@@ -74,7 +74,7 @@ class RunSimulation
 public:
 	RunSimulation() : m_irq("MyInterrupt"),
 			  m_source("Source"),
-			  m_dest("Destination"),
+			  m_dest("Destination")
 	{
 		//m_irq = new Interrupt("MyInterrupt");
 		//m_source = new Source("Source");
