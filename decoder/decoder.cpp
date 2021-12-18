@@ -64,11 +64,11 @@ SC_MODULE(decoder)
     A0.B(s0);
   }
 
-  and2 A3, A2, A1, A0;
-  not1 N1, N0;
-  sc_signal<bool> s1, s0;
-  sc_in<bool> a1, a0;
-  sc_out<bool> f3, f2, f1, f0;
+  and2 A3, A2, A1, A0;        // submodule AND
+  not1 N1, N0;                // submodule NOT
+  sc_signal<bool> s1, s0;     // 2 wires for interconnect between submodules
+  sc_in<bool> a1, a0;         // the input of decoder 2 bit
+  sc_out<bool> f3, f2, f1, f0;// the output of decoder 4 bit
 };
 
 SC_MODULE(stim)
