@@ -3,12 +3,12 @@ CXX     := g++
 INC     := -I"$(SYSTEMC_HOME)/include" 
 CFLAGS  := -O3 -Wall -pthread $(INC)
 
-SRC 	:= ./src
+SRC 	:= ./
 SRCS    := $(shell find $(SRC) -name '*.cpp')
 
 OBJS    := $(SRCS:%.cpp=%.o)
 
-BIN 	:= ./bin
+BIN 	:= ./
 LDFLAGS := -L"$(SYSTEMC_HOME)/lib-linux64"
 LDLIBS	:= -lm -lsystemc
 MKDIR   := mkdir
