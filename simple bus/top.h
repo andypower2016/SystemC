@@ -20,12 +20,12 @@ SC_MODULE(top)
     // constructor
     SC_CTOR(top) :
       clk("ClkFast", 1, SC_NS),
-      slow_clk("ClkSlow", 6, SC_NS, 0.5, 5*2, SC_NS, true)
+      slow_clk("ClkSlow", 5, SC_NS, 0.5)
     {
         // Create instances
       	master = new nb_master("nb master", 0x00, 500); // start from address 0x04, timeout=500ns
         bus = new simple_bus("bus");
-        slv = new slave("slave", 0x00, 0xFF);
+        slv = new slave("slave", 0x00, 0x20);
 
         // Clocks
         master->clock(clk);

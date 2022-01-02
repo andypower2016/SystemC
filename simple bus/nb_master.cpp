@@ -22,19 +22,19 @@ void nb_master::run()
 	{
 
 		bus_port->write(id, &data, addr);
+		//wait for the bus to complete request
+		while(bus_port->get_bus_status(id) != BUS_OK)
+		{
+			dbg_print("waiting for bus to complete");
+			wait();
+		}
+
 		++data;
 		addr = (addr + 4) % addr_size;
 		if(addr == 0)
 		{
 			addr = m_start_addr;
 		}
-
-		// wait for the bus to complete request
-		while(bus_port->get_bus_status(id) != BUS_OK)
-		{
-			wait();
-		}
-
 		// next clock pos edge
 		wait();
 

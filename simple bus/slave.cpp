@@ -37,8 +37,8 @@ bus_status slave::read(int *data, unsigned int addr)
 {
 	if(addr <= m_end_addr && addr >= m_start_addr)
 	{
-		int idx = (m_end_addr-m_start_addr)/4;
-		dbg_print("read from slave, addr=0x%04x, idx=%d", addr, idx);
+		int idx = (addr-m_start_addr)/4;
+		dbg_print("reading from slave, data=%d addr=0x%04x, idx=%d",*data, addr, idx);
 		*data = mem[idx];
 
 		return BUS_OK;
@@ -50,8 +50,8 @@ bus_status slave::write(int *data, unsigned int addr)
 {
 	if(addr <= m_end_addr && addr >= m_start_addr)
 	{
-		int idx = (m_end_addr-m_start_addr)/4;
-		dbg_print("writing to slave, addr=0x%04x, idx=%d", addr, idx);
+		int idx = (addr-m_start_addr)/4;
+		dbg_print("writing to slave, data=%d addr=0x%04x, idx=%d",*data, addr, idx);
 		mem[idx] = *data;
 
 		return BUS_OK;

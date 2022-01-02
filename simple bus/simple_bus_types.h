@@ -3,7 +3,7 @@
 #include "systemc.h"
 
 #define dbg_print(format, args...) std::cout << sc_time_stamp(); \
-	printf(" [%s:%d] " format "\n", __FUNCTION__, __LINE__, ##args) 
+	printf(" %s [%s:%d] " format "\n", __FILE__, __FUNCTION__, __LINE__, ##args) 
 
 enum bus_status {
 	BUS_BUSY,
