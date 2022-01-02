@@ -2,47 +2,56 @@
 #define TOP_H
 
 #include "systemc.h"
-#include "nbmaster.h"
+#include "nb_master.h"
 #include "simple_bus.h"
+#include "slave.h"
 
-SC_MODULE(simple_bus_test)
+SC_MODULE(top)
 {
     // channels
     sc_clock clk;
 
     // module instances
-    nb_master *nb_master;
-    simple_bus *simple_bus;
+    nb_master *master;
+    simple_bus *bus;
+    slave *slv;
 
     // constructor
     SC_CTOR(top)
       : clk("clk")
     {
         // Create instances
-      	nb_master = new nb_master("nb master", 0x04, 500); // start from address 0x04, timeout=500ns
-        simple_bus = new simple_bus("bus");
+      	master = new nb_master("nb master", 0x04, 500); // start from address 0x04, timeout=500ns
+        bus = new simple_bus("bus");
+        slv = new slave("slave", 0x00, 0xFF);
 
         // Clocks
-        nb_master->clock(clk);
-        simple_bus->clock(clk);
+        master->clock(clk);
+        bus->clock(clk);
+        slv->clock(clk);
 
         // Bus interface with master
-        nb_master->bus_port(*simple_bus);
-
+        master->bus_port(*bus);
+        bus->slv_port(*slv);
     }
 
     // destructor
     ~top()
     {
-      if (nb_master) 
+      if (master) 
       {
-        delete nb_master; 
-        nb_master = 0;
+        delete master; 
+        master = 0;
       }
-      if (simple_bus) 
+      if (bus) 
       {
-        delete simple_bus; 
-        simple_bus = 0;
+        delete bus; 
+        bus = 0;
+      }
+      if (slv) 
+      {
+        delete slv; 
+        slv = 0;
       }
     }
 
