@@ -75,6 +75,15 @@ void simple_bus::handle_request()
 		if(next_request)
 		{	
 			// TODO : complete request through slave
+			if(next_request->do_write)
+			{
+
+			}
+			else
+			{
+
+			}
+			next_request->status = BUS_IDLE;
 		}
 	}
 }
