@@ -16,6 +16,7 @@ typedef struct request
 
 class simple_bus : public no_blocking_if, public sc_module
 {
+
 public:
 	sc_in_clk clock;
 	sc_port<slave_if> slv_port;
@@ -26,10 +27,11 @@ public:
   	void handle_request();
   	request* get_request(int id);
   	request* next_request();
+  	
 protected:
 	virtual void read(int id, int *data, int addr);
  	virtual void write(int id, int *data, int addr);
- 	virtual bus_status get_bus_status();
+ 	virtual bus_status get_bus_status(int id);
 
 private:
 

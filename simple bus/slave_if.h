@@ -6,8 +6,8 @@
 class slave_if : public virtual sc_interface
 {
 public:
-	virtual void read(int *data, unsigned int addr)=0;
- 	virtual void write(int *data, unsigned int addr)=0;
+	virtual bus_status read(int *data, unsigned int addr)=0;
+ 	virtual bus_status write(int *data, unsigned int addr)=0;
 };
 
 #endif

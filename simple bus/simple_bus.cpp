@@ -60,10 +60,14 @@ void simple_bus::write(int id, int *data, int addr)
 	}
 }
 
-bus_status simple_bus::get_bus_status()
+bus_status simple_bus::get_bus_status(int id)
 {
-	bus_status tmp;
-	return tmp;
+	auto iter = m_bus_requests.find(id);
+	if(iter == m_bus_requests.end())
+	{
+		return BUS_STATUS_NOT_FOUND;
+	}	
+	return iter->second->status;
 }
 
 void simple_bus::handle_request()
@@ -71,19 +75,26 @@ void simple_bus::handle_request()
 	while(true)
 	{
 		wait();
-		auto next_request = next_request();
-		if(next_request)
+		auto request = next_request();
+		if(request)
 		{	
-			// TODO : complete request through slave
-			if(next_request->do_write)
+			bus_status slave_status;
+			if(request->do_write)
 			{
-
+				slave_status = slv_port->write(request->data, request->addr);
 			}
 			else
 			{
-
+				slave_status = slv_port->read(request->data, request->addr);
 			}
-			next_request->status = BUS_IDLE;
+			switch(slave_status)
+			{
+				case BUS_OK:
+					request->status = BUS_OK;
+				default:
+					request->status = BUS_ERROR;
+					break;
+			}
 		}
 	}
 }

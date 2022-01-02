@@ -8,7 +8,7 @@ class no_blocking_if : public virtual sc_interface
 public:
 	virtual void read(int id, int *data, int addr)=0;
  	virtual void write(int id, int *data, int addr)=0;
- 	virtual bus_status get_bus_status()=0;
+ 	virtual bus_status get_bus_status(int id)=0;
 };
 
 #endif

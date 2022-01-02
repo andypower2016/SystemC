@@ -11,11 +11,13 @@ nb_master::nb_master(sc_module_name mn, unsigned int start_addr, int timeout)
 void nb_master::run()
 {
 	wait();
+	
 	int data = 1;
 	int addr = m_start_addr;
 	int idx_range = 5;	// indexs of int data
 	int addr_size = (m_start_addr + 4 * idx_range);
 	int id = 1;
+
 	while(true)
 	{
 
@@ -26,8 +28,17 @@ void nb_master::run()
 		{
 			addr = m_start_addr;
 		}
+
+		// wait for the bus to complete request
+		while(bus_port->get_bus_status(id) != BUS_OK)
+		{
+			wait();
+		}
+
+		// next clock pos edge
 		wait();
 
+		// breaks when writing all index once
 		if(data > idx_range)
 			break;
 	}

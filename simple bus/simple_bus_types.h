@@ -9,6 +9,7 @@ enum bus_status {
 	BUS_BUSY,
 	BUS_OK,
 	BUS_ERROR,
+	BUS_STATUS_NOT_FOUND,
 };
 
 #endif
