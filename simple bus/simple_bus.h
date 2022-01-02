@@ -16,17 +16,18 @@ typedef struct request
 
 class simple_bus : public no_blocking_if, public sc_module
 {
+public:
 	sc_in_clk clock;
-
+	
 	SC_HAS_PROCESS(simple_bus);
 
 	simple_bus(sc_module_name mn);
   	virtual ~simple_bus();
   	void handle_request();
-
+  	request* get_request(int id);
 protected:
-	virtual void read(int *data, int addr);
- 	virtual void write(int *data, int addr);
+	virtual void read(int id, int *data, int addr);
+ 	virtual void write(int id, int *data, int addr);
  	virtual bus_status get_bus_status();
 
 private:

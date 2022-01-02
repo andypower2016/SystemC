@@ -11,6 +11,8 @@ SC_MODULE(nb_master)
 	int m_start_addr;
 	int m_timeout;
 
+	int m_addr_range;
+
 	SC_HAS_PROCESS(nb_master);
 
 	nb_master(sc_module_name mn, unsigned int start_addr, timeout);
