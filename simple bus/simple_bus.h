@@ -11,7 +11,7 @@ typedef struct request
 	bool do_write;
 	int *data;
 	int addr;
-	bus_status m_status;
+	bus_status status;
 } request;
 
 class simple_bus : public no_blocking_if, public sc_module
@@ -25,6 +25,7 @@ public:
   	virtual ~simple_bus() {}
   	void handle_request();
   	request* get_request(int id);
+  	request* next_request();
 protected:
 	virtual void read(int id, int *data, int addr);
  	virtual void write(int id, int *data, int addr);

@@ -10,6 +10,7 @@ SC_MODULE(top)
 {
     // channels
     sc_clock clk;
+    sc_clock slow_clk;
 
     // module instances
     nb_master *master;
@@ -17,18 +18,19 @@ SC_MODULE(top)
     slave *slv;
 
     // constructor
-    SC_CTOR(top)
-      : clk("clk")
+    SC_CTOR(top) :
+      clk("ClkFast", 1, SC_NS),
+      slow_clk("ClkSlow", 6, SC_NS, 0.5, 5*2, SC_NS, true)
     {
         // Create instances
-      	master = new nb_master("nb master", 0x04, 500); // start from address 0x04, timeout=500ns
+      	master = new nb_master("nb master", 0x00, 500); // start from address 0x04, timeout=500ns
         bus = new simple_bus("bus");
         slv = new slave("slave", 0x00, 0xFF);
 
         // Clocks
         master->clock(clk);
         bus->clock(clk);
-        slv->clock(clk);
+        slv->clock(slow_clk);
 
         // Bus interface with master
         master->bus_port(*bus);
